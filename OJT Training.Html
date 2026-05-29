@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Emeritus OJT Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+--bg0:#0D1117;--bg1:#161B22;--bg2:#1C2330;--bg3:#21283A;--bg4:#2A3449;
+--txt1:#F0F4FF;--txt2:#A8B8D0;--txt3:#6B7FA0;
+--teal:#1DD4A8;--teal2:#0A9E7E;--tealb:rgba(29,212,168,.12);
+--gold:#F5A623;--gold2:#C97A00;--goldb:rgba(245,166,35,.12);
+--purple:#9B8CFF;--purple2:#6C5FE8;
+--red:#FF5C6A;--red2:#C23B4A;--redb:rgba(255,92,106,.12);
+--amber:#FFAA44;--amberb:rgba(255,170,68,.12);
+--green:#4ADE80;--blue:#60A5FA;
+--border:#2A3449;--border2:#3D4E68;
+--r:9px;
+}
+.light{
+--bg0:#F0F2F7;--bg1:#FFFFFF;--bg2:#F5F7FC;--bg3:#EAEdf5;--bg4:#E0E5F0;
+--txt1:#0F1724;--txt2:#3A4A62;--txt3:#7A8AA0;
+--teal:#0A7A5E;--teal2:#0C9070;--tealb:rgba(10,122,94,.1);
+--gold:#B86E00;--gold2:#9A5C00;--goldb:rgba(184,110,0,.1);
+--purple:#4A38C0;--purple2:#5847D0;
+--red:#C42030;--red2:#A01828;--redb:rgba(196,32,48,.1);
+--amber:#A06000;--amberb:rgba(160,96,0,.1);
+--green:#1A7A40;--blue:#1E50B0;
+--border:#D4DAE8;--border2:#B8C2D4;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',system-ui,sans-serif}
+body{background:var(--bg0);color:var(--txt1);font-size:12px;display:flex;flex-direction:column;min-height:100vh}
+a{text-decoration:none;color:inherit}
+.tb{background:var(--bg1);border-bottom:1.5px solid var(--border);display:flex;align-items:center;height:46px;padding:0 14px;gap:10px;position:sticky;top:0;z-index:100}
+.logo-box{width:28px;height:28px;background:linear-gradient(135deg,#F5A623,#FF6B6B);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.logo-name{font-size:13px;font-weight:700;color:var(--txt1);line-height:1}
+.logo-sub{font-size:9px;color:var(--txt3);line-height:1}
+.sys-tabs{display:flex;gap:4px;margin:0 10px}
+.stab{padding:5px 12px;border-radius:20px;font-size:10.5px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.stab.eff{color:var(--teal);background:var(--tealb);border-color:rgba(29,212,168,.25)}
+.stab.eff.on{background:var(--teal2);color:#fff;border-color:var(--teal2)}
+.ml{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ttog{background:var(--bg3);border:1px solid var(--border);border-radius:18px;padding:2px;display:flex;cursor:pointer}
+.tbtn{padding:3px 10px;border-radius:14px;font-size:10.5px;font-weight:600;color:var(--txt3);transition:all .15s}
+.tbtn.on{background:var(--teal);color:#fff}
+.av{width:26px;height:26px;border-radius:50%;background:var(--purple2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.wrap{display:flex;flex:1;overflow:hidden}
+.sb{width:200px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.nb{padding:8px 0 4px}
+.nl{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--txt3);padding:0 13px 5px}
+.ni{display:flex;align-items:center;gap:7px;padding:8px 13px;font-size:11.5px;font-weight:500;color:var(--txt2);cursor:pointer;border-left:3px solid transparent;transition:all .12s}
+.ni:hover{background:var(--bg2);color:var(--txt1)}
+.ni.on{background:var(--bg2);color:var(--txt1);border-left-color:var(--teal)}
+.ndiv{height:1px;background:var(--border);margin:5px 13px}
+.nbg{margin-left:auto;background:var(--teal);color:#fff;border-radius:8px;font-size:9px;padding:1px 5px;font-weight:700}
+.sstatus{padding:10px 13px;border-top:1px solid var(--border);margin-top:auto}
+.sr{display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px}
+.ct{flex:1;overflow-y:auto;background:var(--bg0)}
+.pg{display:none}
+.pg.on{display:block}
+.ph{padding:12px 15px;border-bottom:1px solid var(--border);background:var(--bg1);display:flex;justify-content:space-between;align-items:center}
+.pt{font-size:14px;font-weight:700}
+.ps{font-size:10px;color:var(--txt3);margin-top:2px}
+.pbtn{border-radius:6px;padding:5px 11px;font-size:10.5px;cursor:pointer;font-weight:600;border:1px solid var(--border);background:var(--bg2);color:var(--txt2);display:inline-flex;align-items:center;gap:5px}
+.pbtn:hover{background:var(--bg3)}
+.pbtn.primary{background:var(--teal2);color:#fff;border-color:var(--teal2)}
+.pbtn.primary:hover{background:var(--teal)}
+.pbtn.gold{background:var(--gold2);color:#fff;border-color:var(--gold2)}
+.pbtn.purple{background:var(--purple2);color:#fff;border-color:var(--purple2)}
+.ks{display:grid;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.kc{background:var(--bg1);padding:11px 13px}
+.kl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--txt3);margin-bottom:3px}
+.kv{font-size:19px;font-weight:700;line-height:1}
+.ks2{font-size:9.5px;color:var(--txt3);margin-top:2px}
+.up{color:var(--green)}.dn{color:var(--red)}.wa{color:var(--amber)}
+.sg2{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--border)}
+.sg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-bottom:1px solid var(--border)}
+.sp{border-right:1px solid var(--border);padding:14px;min-width:0}
+.sp:last-child{border-right:none}
+.sph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.spt{font-size:11.5px;font-weight:700;color:var(--txt1);display:flex;align-items:center;gap:5px}
+.dot7{width:7px;height:7px;border-radius:50%}
+.va{font-size:10px;color:var(--blue);cursor:pointer}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r)}
+.card-p{padding:12px}
+.qg{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.qcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit}
+.qcard:hover{transform:translateY(-2px);border-color:var(--teal);background:var(--bg3)}
+.qcard .qico{width:32px;height:32px;border-radius:7px;background:var(--tealb);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.qcard.gold .qico{background:var(--goldb);color:var(--gold)}
+.qcard.purple .qico{background:rgba(155,140,255,.12);color:var(--purple)}
+.qcard.blue .qico{background:rgba(96,165,250,.12);color:var(--blue)}
+.qcard.red .qico{background:var(--redb);color:var(--red)}
+.qcard.amber .qico{background:var(--amberb);color:var(--amber)}
+.qcard .qttl{font-size:11.5px;font-weight:700;color:var(--txt1)}
+.qcard .qsub{font-size:9.5px;color:var(--txt3)}
+.qcard .qopen{font-size:9.5px;color:var(--teal);margin-top:auto;font-weight:600}
+.mt{width:100%;border-collapse:collapse}
+.mt th{font-size:9.5px;color:var(--txt3);font-weight:700;text-align:left;padding:6px 4px;text-transform:uppercase;letter-spacing:.2px}
+.mt td{font-size:11px;color:var(--txt2);padding:7px 4px;border-top:1px solid var(--border)}
+.mt tr:first-child td{border-top:none}
+.mt td.lbl{color:var(--txt3);font-size:10px;text-transform:uppercase;letter-spacing:.3px;font-weight:600;width:42%}
+.mt td.val{color:var(--txt1);font-weight:600;font-family:'JetBrains Mono','Consolas',monospace;font-size:11px}
+.copybtn{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);border-radius:5px;padding:3px 7px;font-size:9.5px;cursor:pointer;font-weight:600}
+.copybtn:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+.bd{border-radius:4px;padding:2px 6px;font-size:9.5px;font-weight:600}
+.bg{background:rgba(74,222,128,.12);color:var(--green)}
+.ba{background:var(--amberb);color:var(--amber)}
+.br{background:var(--redb);color:var(--red)}
+.bp{background:rgba(155,140,255,.12);color:var(--purple)}
+.bt{background:var(--tealb);color:var(--teal)}
+.bgo{background:var(--goldb);color:var(--gold)}
+.tmpl{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-family:'JetBrains Mono','Consolas',monospace;font-size:11.5px;color:var(--txt1);line-height:1.85;white-space:pre-wrap;position:relative}
+.tmpl .k{color:var(--teal);font-weight:600}
+.tmpl .v{color:var(--txt3)}
+.ins{background:var(--bg3);border-top:1px solid var(--border);padding:8px 15px;display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--txt2);position:sticky;bottom:0}
+.ins b{color:var(--teal)}
+.ins.gold b{color:var(--gold)}
+.ins .ml{margin-left:auto;color:var(--blue);font-size:10px;cursor:pointer}
+#toast{position:fixed;bottom:60px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--teal2);color:#fff;padding:8px 18px;border-radius:20px;font-size:11px;font-weight:600;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::-webkit-scrollbar-track{background:var(--bg1)}
+.section-title{padding:10px 15px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);background:var(--bg0)}
+/* TODO LIST */
+.todo-input-row{display:flex;gap:6px;margin-bottom:10px}
+.todo-input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--txt1);font-size:11.5px;outline:none;font-family:inherit;transition:border-color .15s}
+.todo-input:focus{border-color:var(--teal)}
+.todo-list{list-style:none;padding:0;margin:0;max-height:280px;overflow-y:auto}
+.todo-item{display:flex;align-items:center;gap:9px;padding:7px 9px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;margin-bottom:5px;transition:all .15s}
+.todo-item:hover{background:var(--bg3)}
+.todo-item.done .todo-text{text-decoration:line-through;color:var(--txt3);opacity:.6}
+.todo-check{width:16px;height:16px;border:1.5px solid var(--border2);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg1);color:#fff;font-size:11px;font-weight:700;line-height:1}
+.todo-check.checked{background:var(--teal);border-color:var(--teal)}
+.todo-text{flex:1;font-size:11.5px;color:var(--txt1);word-break:break-word;cursor:pointer}
+.todo-del{opacity:0;transition:opacity .15s;cursor:pointer;background:transparent;border:none;color:var(--red);font-size:13px;font-weight:700;padding:2px 6px;border-radius:4px}
+.todo-del:hover{background:var(--redb)}
+.todo-item:hover .todo-del{opacity:1}
+.todo-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:10px;color:var(--txt3)}
+.todo-prg{background:var(--bg3);border-radius:4px;height:4px;margin-top:5px;overflow:hidden}
+.todo-prg-f{height:100%;background:var(--teal);transition:width .3s;border-radius:4px}
+.todo-empty{text-align:center;padding:24px 12px;color:var(--txt3);font-size:11px;font-style:italic}
+</style>
+</head>
+<body>
+<div id="toast">Copied to clipboard</div>
+<div id="app">
+<div class="tb">
+  <div class="logo-box">E</div>
+  <div style="margin-left:4px">
+    <div class="logo-name">EMERITUS OJT</div>
+    <div class="logo-sub">Quick Access &amp; Templates Hub</div>
+  </div>
+  <div class="sys-tabs">
+    <div class="stab eff on">⬡ Outreach Intelligence Platform</div>
+  </div>
+  <div class="ml">
+    <div class="ttog" onclick="toggleTheme()">
+      <div class="tbtn on" id="dbtn">🌙 Dark</div>
+      <div class="tbtn" id="lbtn">☀ Light</div>
+    </div>
+    <span style="font-size:10px;color:var(--txt3)">FY26 Q4</span>
+    <div style="font-size:10px;color:var(--green)">● Live</div>
+    <div class="av">PK</div>
+    <div style="font-size:10px;color:var(--txt2)">Sr. Program Advisor</div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="sb">
+  <div class="nb">
+    <div class="nl">Workspace</div>
+    <div class="ni on" data-nav="dashboard" onclick="go('dashboard')">🏠 Dashboard</div>
+    <div class="ndiv"></div>
+    <div class="nl">Templates</div>
+    <div class="ni" data-nav="chatter" onclick="go('chatter')">💬 Chatter Template</div>
+    <div class="ni" data-nav="zendesk" onclick="go('zendesk')">🎫 Zendesk Template</div>
+    <div class="ndiv"></div>
+    <div class="nl">Resources</div>
+    <div class="ni" data-nav="links" onclick="go('links')">🔗 Important Links<span class="nbg">13</span></div>
+    <div class="ni" data-nav="banks" onclick="go('banks')">🏦 Bank Details<span class="nbg">2</span></div>
+  </div>
+  <div class="sstatus">
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--txt3);margin-bottom:5px">User Status</div>
+    <div class="sr"><span style="color:var(--txt3)">User</span><span style="color:var(--txt2);font-weight:600">Pramod Kumar</span></div>
+    <div class="sr"><span style="color:var(--txt3)">Manager</span><span style="color:var(--txt2);font-weight:600">Raja Jena</span></div>
+    <div class="sr"><span style="color:var(--txt3)">Team</span><span style="color:var(--txt2);font-weight:600">Team Raja</span></div>
+    <div class="sr"><span style="color:var(--txt3)">Quarter</span><span style="color:var(--teal);font-weight:700">FY26 Q4</span></div>
+  </div>
+</div>
+
+<div class="ct">
+
+<!-- DASHBOARD -->
+<div class="pg on" id="pg-dashboard">
+  <div class="ph">
+    <div>
+      <div class="pt" style="color:var(--teal)">OJT Dashboard — Overview</div>
+      <div class="ps">Personal workspace · Quick access to tools, templates &amp; resources · <span style="color:var(--green)">● Live</span></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <div class="pbtn" onclick="go('chatter')">💬 New Chatter</div>
+      <div class="pbtn primary" onclick="go('links')">🔗 All Links</div>
+    </div>
+  </div>
+  <div class="ks" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kc"><div class="kl">Important Links</div><div class="kv" style="color:var(--teal)">13</div><div class="ks2">Quick-access tools</div></div>
+    <div class="kc"><div class="kl">Templates</div><div class="kv" style="color:var(--purple)">2</div><div class="ks2">Chatter + Zendesk</div></div>
+    <div class="kc"><div class="kl">Bank Accounts</div><div class="kv" style="color:var(--gold)">2</div><div class="ks2">US + SG</div></div>
+    <div class="kc"><div class="kl">Quick Apps</div><div class="kv" style="color:var(--blue)">11</div><div class="ks2">SF · Airtable · Sheets</div></div>
+    <div class="kc"><div class="kl">Active Quarter</div><div class="kv">Q4</div><div class="ks2 up">FY26 In Progress</div></div>
+  </div>
+
+  <div class="section-title">⭐ Pinned Quick Access</div>
+  <div class="sp" style="border-right:none;border-bottom:1px solid var(--border)">
+    <div class="qg">
+      <a href="https://emeritus.lightning.force.com/lightning/r/Dashboard/01Z2s000000byI8EAI/view" target="_blank" class="qcard">
+        <div class="qico">📊</div><div class="qttl">SF Dashboard</div><div class="qsub">Salesforce Lightning Dashboard</div><div class="qopen">Open ↗</div>
+      </a>
+      <a href="https://emeritus.lightning.force.com/lightning/o/Interested_Course__c/list?filterName=X03_My_All_open_ICs37" target="_blank" class="qcard blue">
+        <div class="qico">📂</div><div class="qttl">Open Leads SF</div><div class="qsub">My All Open ICs</div><div class="qopen" style="color:var(--blue)">Open ↗</div>
+      </a>
+      <a href="https://emeritus.lightning.force.com/lightning/r/Report/00OAy000000KWH1/view" target="_blank" class="qcard purple">
+        <div class="qico">👥</div><div class="qttl">Team Raja Opens</div><div class="qsub">All Opens List Report</div><div class="qopen" style="color:var(--purple)">Open ↗</div>
+      </a>
+      <a href="https://tools.emeritus-analytics.io/login/financeandoutreach?redirectTo=/home" target="_blank" class="qcard gold">
+        <div class="qico">💰</div><div class="qttl">Invoice Utility</div><div class="qsub">Finance &amp; Outreach</div><div class="qopen" style="color:var(--gold)">Open ↗</div>
+      </a>
+      <a href="https://docs.google.com/spreadsheets/d/1sPaJqPOQPDT5KSBc_rIPIOxbGkctNDfl_o6iy0Xftj0/edit?gid=0#gid=0" target="_blank" class="qcard">
+        <div class="qico">📈</div><div class="qttl">Pipeline FY26 Q4</div><div class="qsub">Google Sheet</div><div class="qopen">Open ↗</div>
+      </a>
+      <a href="https://airtable.com/appZ0sHioHoKD84I7/pagVJ7SJWU2N3g3Ly" target="_blank" class="qcard amber">
+        <div class="qico">📅</div><div class="qttl">Live Session Calendar</div><div class="qsub">Airtable (most used)</div><div class="qopen" style="color:var(--amber)">Open ↗</div>
+      </a>
+      <a href="https://docs.google.com/spreadsheets/d/1FjWLTubYiQk2-FdE1MfBoSULddpr0Dp-7qcTpJVysQY/edit?gid=257272262#gid=257272262" target="_blank" class="qcard purple">
+        <div class="qico">🎯</div><div class="qttl">BSC | FY26 Q4</div><div class="qsub">Balance Score Card</div><div class="qopen" style="color:var(--purple)">Open ↗</div>
+      </a>
+      <a href="https://calendly.com/app/login" target="_blank" class="qcard blue">
+        <div class="qico">🗓</div><div class="qttl">Calendly</div><div class="qsub">Scheduling</div><div class="qopen" style="color:var(--blue)">Open ↗</div>
+      </a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScqFB564iN_9gNThdBIkO4h5KO_1Hz6h1JgcbVWpzqVc8MBGg/viewform" target="_blank" class="qcard red">
+        <div class="qico">⏱</div><div class="qttl">OT Form</div><div class="qsub">Overtime submission</div><div class="qopen" style="color:var(--red)">Open ↗</div>
+      </a>
+      <a href="https://myapps.microsoft.com/" target="_blank" class="qcard">
+        <div class="qico">🪟</div><div class="qttl">My Apps</div><div class="qsub">Microsoft App Portal</div><div class="qopen">Open ↗</div>
+      </a>
+      <div class="qcard gold" onclick="go('chatter')">
+        <div class="qico">💬</div><div class="qttl">Chatter Template</div><div class="qsub">Copy-ready format</div><div class="qopen" style="color:var(--gold)">View →</div>
+      </div>
+      <div class="qcard amber" onclick="go('zendesk')">
+        <div class="qico">🎫</div><div class="qttl">Zendesk Template</div><div class="qsub">Ticket logging format</div><div class="qopen" style="color:var(--amber)">View →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sg2">
+    <div class="sp">
+      <div class="sph"><div class="spt"><span class="dot7" style="background:var(--teal)"></span>Recent Activity</div><div class="va">View All</div></div>
+      <table class="mt">
+        <thead><tr><th>Activity</th><th>Source</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Logged Chatter — Cohort #4521</td><td>SF Dashboard</td><td><span class="bd bg">Done</span></td></tr>
+          <tr><td>Zendesk Ticket #88231 updated</td><td>Zendesk</td><td><span class="bd bt">Open</span></td></tr>
+          <tr><td>Pipeline FY26 Q4 reviewed</td><td>Google Sheets</td><td><span class="bd bg">Done</span></td></tr>
+          <tr><td>Live Session calendar synced</td><td>Airtable</td><td><span class="bd bg">Done</span></td></tr>
+          <tr><td>OT Form submitted (May)</td><td>Google Forms</td><td><span class="bd ba">Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sp">
+      <div class="sph">
+        <div class="spt"><span class="dot7" style="background:var(--gold)"></span>Today's To-Do List</div>
+        <div style="display:flex;gap:5px">
+          <button class="copybtn" onclick="document.getElementById('todoInput').focus()">+ Add Task</button>
+          <button class="copybtn" onclick="clearDoneTodos()">Clear Done</button>
+        </div>
+      </div>
+      <div class="todo-input-row">
+        <input type="text" id="todoInput" class="todo-input" placeholder="Add a new task and press Enter…" onkeydown="if(event.key==='Enter'){addTodoFromInput()}">
+        <button class="pbtn primary" style="padding:6px 14px" onclick="addTodoFromInput()">Add</button>
+      </div>
+      <ul class="todo-list" id="todoList"></ul>
+      <div class="todo-footer">
+        <span id="todoCount">0 of 0 tasks completed</span>
+        <span id="todoPct" style="color:var(--teal);font-weight:700">0%</span>
+      </div>
+      <div class="todo-prg"><div class="todo-prg-f" id="todoPrgF" style="width:0%"></div></div>
+      <div style="margin-top:10px;background:var(--goldb);border:1px solid rgba(245,166,35,.25);border-radius:7px;padding:9px 11px;font-size:10.5px;color:var(--txt2)">
+        💡 <b style="color:var(--gold)">Note:</b> Your tasks are saved locally in this browser. Clearing browser data will reset them.
+      </div>
+    </div>
+  </div>
+
+  <div class="ins"><b>Welcome back, Pramod!</b> &nbsp;Check off your tasks for the day &amp; stay on track. Pipeline FY26 Q4 is on-track — keep the momentum 🚀 <span class="ml" onclick="go('links')">View All Tools →</span></div>
+</div>
+
+<!-- CHATTER TEMPLATE -->
+<div class="pg" id="pg-chatter">
+  <div class="ph">
+    <div><div class="pt" style="color:var(--purple)">Chatter Template</div><div class="ps">Standard format for logging Chatter entries on Salesforce</div></div>
+    <div style="display:flex;gap:6px">
+      <div class="pbtn" onclick="copyText('chatterTmpl', this)">📋 Copy Template</div>
+      <div class="pbtn primary" onclick="copyText('chatterTmpl', this)">⬇ Use Template</div>
+    </div>
+  </div>
+  <div class="sg2">
+    <div class="sp">
+      <div class="sph"><div class="spt"><span class="dot7" style="background:var(--purple)"></span>Template Body</div>
+        <div class="copybtn" onclick="copyText('chatterTmpl', this)">📋 Copy</div>
+      </div>
+      <div class="tmpl" id="chatterTmpl"><span class="k">PA Name:</span> <span class="v">Program Advisor Name</span>
+<span class="k">Date of Call:</span> <span class="v">DD-MM-YYYY</span>
+<span class="k">Wrike Code:</span> <span class="v"></span>
+<span class="k">Cohort Start Date:</span> <span class="v"></span>
+<span class="k">Descriptive Documentation:</span> <span class="v">No Answer</span>
+<span class="k">Next Follow-Up Date &amp; Time:</span> <span class="v">Y/N/NA</span>
+<span class="k">Email:</span> <span class="v">Y/N</span>
+<span class="k">VM:</span> <span class="v">Y/N</span>
+<span class="k">TA Offered (Amt):</span> <span class="v">Y/N/NA</span>
+<span class="k">Referral/Loan Pitched:</span> <span class="v">Y/N/NA</span></div>
+    </div>
+    <div class="sp">
+      <div class="sph"><div class="spt"><span class="dot7" style="background:var(--teal)"></span>Field Guide</div></div>
+      <table class="mt">
+        <thead><tr><th>Field</th><th>Expected Value</th><th>Required</th></tr></thead>
+        <tbody>
+          <tr><td>PA Name</td><td>Full name</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Date of Call</td><td>DD-MM-YYYY</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Wrike Code</td><td>Project code</td><td><span class="bd ba">If applicable</span></td></tr>
+          <tr><td>Cohort Start Date</td><td>DD-MM-YYYY</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Descriptive Documentation</td><td>Free-text notes</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Next Follow-Up Date &amp; Time</td><td>Y / N / NA</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Email</td><td>Y / N</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>VM</td><td>Y / N</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>TA Offered (Amt)</td><td>Y / N / NA + Amount</td><td><span class="bd ba">If applicable</span></td></tr>
+          <tr><td>Referral/Loan Pitched</td><td>Y / N / NA</td><td><span class="bd ba">If applicable</span></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;background:var(--tealb);border:1px solid rgba(29,212,168,.25);border-radius:7px;padding:9px 11px;font-size:10.5px;color:var(--txt2)">
+        💡 <b style="color:var(--teal)">Tip:</b> Always paste your Chatter directly under the SF lead — never as a comment thread reply.
+      </div>
+    </div>
+  </div>
+  <div class="ins"><b>Chatter Template</b> &nbsp;ready to use. Click <b>Copy Template</b> to paste it into Salesforce. Maintain consistent format for cross-team auditing.</div>
+</div>
+
+<!-- ZENDESK TEMPLATE -->
+<div class="pg" id="pg-zendesk">
+  <div class="ph">
+    <div><div class="pt" style="color:var(--amber)">Zendesk Template</div><div class="ps">Standard format for Zendesk ticket logging &amp; updates</div></div>
+    <div style="display:flex;gap:6px">
+      <div class="pbtn" onclick="copyText('zendeskTmpl', this)">📋 Copy Template</div>
+      <div class="pbtn gold" onclick="copyText('zendeskTmpl', this)">⬇ Use Template</div>
+    </div>
+  </div>
+  <div class="sg2">
+    <div class="sp">
+      <div class="sph"><div class="spt"><span class="dot7" style="background:var(--amber)"></span>Template Body</div>
+        <div class="copybtn" onclick="copyText('zendeskTmpl', this)">📋 Copy</div>
+      </div>
+      <div class="tmpl" id="zendeskTmpl"><span class="k">Ticket Status:</span> <span class="v"></span>
+<span class="k">Date of Call/Email:</span> <span class="v">DD-MM-YYYY</span>
+<span class="k">Course Name:</span> <span class="v"></span>
+<span class="k">Remarks:</span> <span class="v"></span>
+<span class="k">Next Follow-Up Date &amp; Time:</span> <span class="v">Y/N/NA</span>
+<span class="k">Email Sent:</span> <span class="v">Y/N/NA</span>
+<span class="k">Offered (Amount):</span> <span class="v">Y/N/NA</span>
+<span class="k">Pitched:</span> <span class="v">Y/N/NA</span></div>
+    </div>
+    <div class="sp">
+      <div class="sph"><div class="spt"><span class="dot7" style="background:var(--teal)"></span>Field Guide</div></div>
+      <table class="mt">
+        <thead><tr><th>Field</th><th>Expected Value</th><th>Required</th></tr></thead>
+        <tbody>
+          <tr><td>Ticket Status</td><td>Open / Pending / Solved / On-Hold</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Date of Call/Email</td><td>DD-MM-YYYY</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Course Name</td><td>Full program/cohort name</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Remarks</td><td>Conversation summary</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Next Follow-Up Date &amp; Time</td><td>Y / N / NA</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Email Sent</td><td>Y / N / NA</td><td><span class="bd br">Yes</span></td></tr>
+          <tr><td>Offered (Amount)</td><td>Y / N / NA + Amount</td><td><span class="bd ba">If applicable</span></td></tr>
+          <tr><td>Pitched</td><td>Y / N / NA</td><td><span class="bd ba">If applicable</span></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;background:var(--goldb);border:1px solid rgba(245,166,35,.25);border-radius:7px;padding:9px 11px;font-size:10.5px;color:var(--txt2)">
+        💡 <b style="color:var(--gold)">Tip:</b> Always close the ticket only after the next follow-up has been scheduled or marked NA.
+      </div>
+    </div>
+  </div>
+  <div class="ins gold"><b>Zendesk Template</b> &nbsp;ready to use. Ensure ticket status &amp; remarks are filled before save. Helps QA &amp; audit cycles.</div>
+</div>
+
+<!-- IMPORTANT LINKS -->
+<div class="pg" id="pg-links">
+  <div class="ph">
+    <div><div class="pt" style="color:var(--teal)">Important Links</div><div class="ps">13 quick-access tools organized by category · Click any card to open in new tab</div></div>
+    <div style="display:flex;gap:6px">
+      <div class="pbtn">🔍 Search</div>
+      <div class="pbtn primary">⭐ Pin Favorites</div>
+    </div>
+  </div>
+  <div class="section-title">🟢 Salesforce</div>
+  <div class="sp" style="border-right:none;border-bottom:1px solid var(--border)">
+    <div class="qg">
+      <a href="https://emeritus.lightning.force.com/lightning/r/Dashboard/01Z2s000000byI8EAI/view" target="_blank" class="qcard">
+        <div class="qico">📊</div><div class="qttl">SF Dashboard</div><div class="qsub">Salesforce Lightning Dashboard</div><div class="qopen">Open ↗</div>
+      </a>
+      <a href="https://emeritus.lightning.force.com/lightning/o/Interested_Course__c/list?filterName=X03_My_All_open_ICs37" target="_blank" class="qcard blue">
+        <div class="qico">📂</div><div class="qttl">Open Leads SF</div><div class="qsub">My All Open ICs (Interested Course)</div><div class="qopen" style="color:var(--blue)">Open ↗</div>
+      </a>
+      <a href="https://emeritus.lightning.force.com/lightning/r/Report/00OAy000000KWH1/view" target="_blank" class="qcard purple">
+        <div class="qico">👥</div><div class="qttl">Team Raja — All Opens</div><div class="qsub">Team-wide Opens Report</div><div class="qopen" style="color:var(--purple)">Open ↗</div>
+      </a>
+    </div>
+  </div>
+  <div class="section-title">🟡 Finance &amp; Pipeline</div>
+  <div class="sp" style="border-right:none;border-bottom:1px solid var(--border)">
+    <div class="qg">
+      <a href="https://tools.emeritus-analytics.io/login/financeandoutreach?redirectTo=/home" target="_blank" class="qcard gold">
+        <div class="qico">💰</div><div class="qttl">Invoice Utility</div><div class="qsub">Finance &amp; Outreach Tool</div><div class="qopen" style="color:var(--gold)">Open ↗</div>
+      </a>
+      <a href="https://docs.google.com/spreadsheets/d/1sPaJqPOQPDT5KSBc_rIPIOxbGkctNDfl_o6iy0Xftj0/edit?gid=0#gid=0" target="_blank" class="qcard">
+        <div class="qico">📈</div><div class="qttl">Pipeline FY26 Q4</div><div class="qsub">Google Sheet — Q4 Pipeline</div><div class="qopen">Open ↗</div>
+      </a>
+    </div>
+  </div>
+  <div class="section-title">🟠 Calendars</div>
+  <div class="sp" style="border-right:none;border-bottom:1px solid var(--border)">
+    <div class="qg">
+      <a href="https://airtable.com/appk045D9ACDOQoif/pagRQtGYC4HoiJiBL?THwHc=b%3AWzAsWyJKUDNzSyIsNixbInNlbEtxSmxlZWlHMkZZOTlzIl0sInFObnlkIl0sWyJzVXoybyIsOSxbInNlbGowRElzQkFjZzFzMHdZIiwic2Vsa0RUcmF6c281QWMxamgiLCJzZWxTTG9BaGpyeHQ1TWhjMCJdLCJ2Ym9NWCJdXQ" target="_blank" class="qcard amber">
+        <div class="qico">📆</div><div class="qttl">Program Calendar</div><div class="qsub">Airtable — Bundles &amp; Child Programs</div><div class="qopen" style="color:var(--amber)">Open ↗</div>
+      </a>
+      <a href="https://airtable.com/appZ0sHioHoKD84I7/pagVJ7SJWU2N3g3Ly" target="_blank" class="qcard amber">
+        <div class="qico">📅</div><div class="qttl">Live Session Calendar</div><div class="qsub">Airtable — Mostly Used</div><div class="qopen" style="color:var(--amber)">Open ↗</div>
+      </a>
+      <a href="https://calendly.com/app/login" target="_blank" class="qcard blue">
+        <div class="qico">🗓</div><div class="qttl">Calendly</div><div class="qsub">Scheduling Platform</div><div class="qopen" style="color:var(--blue)">Open ↗</div>
+      </a>
+    </div>
+  </div>
+  <div class="section-title">🟣 Scorecards &amp; Tracking</div>
+  <div class="sp" style="border-right:none;border-bottom:1px solid var(--border)">
+    <div class="qg">
+      <a href="https://docs.google.com/spreadsheets/d/1FjWLTubYiQk2-FdE1MfBoSULddpr0Dp-7qcTpJVysQY/edit?gid=257272262#gid=257272262" target="_blank" class="qcard purple">
+        <div class="qico">🎯</div><div class="qttl">BSC — FY26 Q4</div><div class="qsub">Balance Score Card | Online Certificate</div><div class="qopen" style="color:var(--purple)">Open ↗</div>
+      </a>
+      <a href="#" onclick="showToast('Local file — open from SharePoint','warn');return false;" class="qcard">
+        <div class="qico">📁</div><div class="qttl">Outreach Repository</div><div class="qsub">White-Label.aspx (local)</div><div class="qopen wa">Local File</div>
+      </a>
+      <a href="#" onclick="showToast('Local file — open from Team Raja shared drive','warn');return false;" class="qcard">
+        <div class="qico">🏖</div><div class="qttl">Leave Planner</div><div class="qsub">2026 Leave Planner-Team Raja.xlsx</div><div class="qopen wa">Local File</div>
+      </a>
+    </div>
+  </div>
+  <div class="section-title">🔴 Tools &amp; Apps</div>
+  <div class="sp" style="border-right:none;border-bottom:1px solid var(--border)">
+    <div class="qg">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScqFB564iN_9gNThdBIkO4h5KO_1Hz6h1JgcbVWpzqVc8MBGg/viewform" target="_blank" class="qcard red">
+        <div class="qico">⏱</div><div class="qttl">OT Form</div><div class="qsub">Overtime Submission</div><div class="qopen" style="color:var(--red)">Open ↗</div>
+      </a>
+      <a href="https://myapps.microsoft.com/" target="_blank" class="qcard">
+        <div class="qico">🪟</div><div class="qttl">My Apps</div><div class="qsub">Microsoft Apps Portal</div><div class="qopen">Open ↗</div>
+      </a>
+    </div>
+  </div>
+  <div class="ins"><b>13 quick-access links</b> &nbsp;organized into 5 categories. All external links open in a new tab. Local files (Outreach Repository, Leave Planner) must be opened via SharePoint/shared drive.</div>
+</div>
+
+<!-- BANK DETAILS -->
+<div class="pg" id="pg-banks">
+  <div class="ph">
+    <div><div class="pt" style="color:var(--gold)">Bank Account Details</div><div class="ps">Emeritus Institute — US &amp; SG Bank Accounts · Click 📋 next to any value to copy</div></div>
+    <div style="display:flex;gap:6px">
+      <div class="pbtn" onclick="copyText('usBankAll', this)">📋 Copy US Details</div>
+      <div class="pbtn gold" onclick="copyText('sgBankAll', this)">📋 Copy SG Details</div>
+    </div>
+  </div>
+  <div class="ks" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kc"><div class="kl">Total Accounts</div><div class="kv">2</div><div class="ks2" style="color:var(--txt3)">US + SG</div></div>
+    <div class="kc"><div class="kl">Primary Bank</div><div class="kv" style="font-size:13px">HSBC</div><div class="ks2 up">Both regions</div></div>
+    <div class="kc"><div class="kl">US Currency</div><div class="kv" style="color:var(--teal)">USD</div><div class="ks2">Acc: 120001217</div></div>
+    <div class="kc"><div class="kl">SG Currency</div><div class="kv" style="color:var(--teal)">USD</div><div class="ks2">Acc: 260-816558-178</div></div>
+  </div>
+  <div class="sg2">
+    <div class="sp">
+      <div class="sph">
+        <div class="spt"><span class="dot7" style="background:var(--teal)"></span>🇺🇸 US Bank Account</div>
+        <div class="copybtn" onclick="copyText('usBankAll', this)">📋 Copy All</div>
+      </div>
+      <table class="mt" id="usBankAll">
+        <tbody>
+          <tr><td class="lbl">Account Name</td><td class="val">Emeritus Institute of Management Inc.</td><td style="width:30px"><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Bank Name</td><td class="val">Hongkong and Shanghai Banking Corporation Limited</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Bank Address</td><td class="val">140 Broadway, New York, NY 10005</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">USD Account Number</td><td class="val">120001217</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Routing Number</td><td class="val">022000020</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">ABA Number</td><td class="val">021001088</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">SWIFT Code</td><td class="val">MRMDUS33</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Currency</td><td class="val"><span class="bd bt">USD</span></td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;background:var(--tealb);border:1px solid rgba(29,212,168,.25);border-radius:7px;padding:9px 11px;font-size:10.5px;color:var(--txt2)">
+        💡 <b style="color:var(--teal)">Tip:</b> Use ABA <b>021001088</b> for domestic wire and SWIFT <b>MRMDUS33</b> for international transfers.
+      </div>
+    </div>
+    <div class="sp">
+      <div class="sph">
+        <div class="spt"><span class="dot7" style="background:var(--gold)"></span>🇸🇬 SG Bank Account</div>
+        <div class="copybtn" onclick="copyText('sgBankAll', this)">📋 Copy All</div>
+      </div>
+      <table class="mt" id="sgBankAll">
+        <tbody>
+          <tr><td class="lbl">Account Name</td><td class="val">Emeritus Institute of Management Pte Ltd</td><td style="width:30px"><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Bank Name</td><td class="val">Hongkong and Shanghai Banking Corporation Limited</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Bank Address</td><td class="val">10 Marina Boulevard, Marina Bay Financial Centre Tower 2, #47-01, Singapore 018983</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Account Number</td><td class="val">260-816558-178</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Bank Code</td><td class="val">7232</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Branch Code</td><td class="val">260</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">SWIFT Code</td><td class="val">HSBCSGSG</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Contact Number</td><td class="val">+65 6472-2669</td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+          <tr><td class="lbl">Currency</td><td class="val"><span class="bd bgo">USD</span></td><td><button class="copybtn" onclick="copyVal(this)">📋</button></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;background:var(--goldb);border:1px solid rgba(245,166,35,.25);border-radius:7px;padding:9px 11px;font-size:10.5px;color:var(--txt2)">
+        💡 <b style="color:var(--gold)">Tip:</b> For SG wires use SWIFT <b>HSBCSGSG</b> with Bank Code <b>7232</b> and Branch <b>260</b>.
+      </div>
+    </div>
+  </div>
+  <div class="ins gold"><b>Bank Details</b> &nbsp;Click 📋 to copy any individual value. Verify with finance before sharing externally. Currency for both accounts is <b>USD</b>.</div>
+</div>
+
+</div></div></div>
+
+<script>
+var isDark=true;
+function go(id){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
+  var pg=document.getElementById('pg-'+id);
+  if(pg) pg.classList.add('on');
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on')});
+  var nav=document.querySelector('.ni[data-nav="'+id+'"]');
+  if(nav) nav.classList.add('on');
+  document.querySelector('.ct').scrollTop=0;
+}
+function toggleTheme(){
+  isDark=!isDark;
+  document.documentElement.classList.toggle('light',!isDark);
+  document.getElementById('dbtn').classList.toggle('on',isDark);
+  document.getElementById('lbtn').classList.toggle('on',!isDark);
+}
+function showToast(msg, type){
+  var t=document.getElementById('toast');
+  t.textContent=msg||'Copied to clipboard';
+  if(type==='warn'){ t.style.background='var(--gold2)'; }
+  else { t.style.background='var(--teal2)'; }
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT=setTimeout(function(){t.classList.remove('show')},1600);
+}
+function copyText(id, btn){
+  var el=document.getElementById(id);
+  if(!el) return;
+  var text=el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    showToast('✔ Copied to clipboard');
+  }).catch(function(){
+    var ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');showToast('✔ Copied');}catch(e){showToast('Copy failed','warn');}
+    document.body.removeChild(ta);
+  });
+}
+function copyVal(btn){
+  var row=btn.closest('tr');
+  var val=row.querySelector('.val').innerText.trim();
+  navigator.clipboard.writeText(val).then(function(){
+    showToast('✔ Copied: '+val.substring(0,40)+(val.length>40?'…':''));
+  }).catch(function(){
+    var ta=document.createElement('textarea');
+    ta.value=val;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');showToast('✔ Copied');}catch(e){showToast('Copy failed','warn');}
+    document.body.removeChild(ta);
+  });
+}
+/* ---- TODO LIST ---- */
+var TODO_KEY='emeritus_ojt_todos_v1';
+function loadTodos(){
+  try{
+    var raw=localStorage.getItem(TODO_KEY);
+    if(raw===null){
+      var seed=[
+        {id:Date.now(),    text:'Review SF Open Leads',                done:false, created:Date.now()},
+        {id:Date.now()+1,  text:'Update Pipeline FY26 Q4 sheet',       done:false, created:Date.now()+1},
+        {id:Date.now()+2,  text:'Send follow-up emails (8 pending)',   done:false, created:Date.now()+2}
+      ];
+      saveTodos(seed);
+      return seed;
+    }
+    return JSON.parse(raw)||[];
+  }catch(e){return [];}
+}
+function saveTodos(arr){
+  try{localStorage.setItem(TODO_KEY, JSON.stringify(arr));}catch(e){}
+}
+function renderTodos(){
+  var list=document.getElementById('todoList');
+  if(!list) return;
+  var todos=loadTodos();
+  list.innerHTML='';
+  if(todos.length===0){
+    list.innerHTML='<div class="todo-empty">No tasks yet — add your first one above ✨</div>';
+  } else {
+    todos.forEach(function(t){
+      var li=document.createElement('li');
+      li.className='todo-item'+(t.done?' done':'');
+      li.innerHTML='<div class="todo-check'+(t.done?' checked':'')+'" onclick="toggleTodo('+t.id+')">'+(t.done?'✓':'')+'</div>'+
+                   '<span class="todo-text" onclick="toggleTodo('+t.id+')"></span>'+
+                   '<button class="todo-del" onclick="deleteTodo('+t.id+')" title="Delete">✕</button>';
+      li.querySelector('.todo-text').textContent=t.text;
+      list.appendChild(li);
+    });
+  }
+  var done=todos.filter(function(t){return t.done}).length;
+  var total=todos.length;
+  var pct=total===0?0:Math.round((done/total)*100);
+  document.getElementById('todoCount').textContent=done+' of '+total+' tasks completed';
+  document.getElementById('todoPct').textContent=pct+'%';
+  document.getElementById('todoPrgF').style.width=pct+'%';
+}
+function addTodo(text){
+  text=(text||'').trim();
+  if(!text) return;
+  var todos=loadTodos();
+  todos.push({id:Date.now()+Math.floor(Math.random()*1000), text:text, done:false, created:Date.now()});
+  saveTodos(todos);
+  renderTodos();
+}
+function addTodoFromInput(){
+  var inp=document.getElementById('todoInput');
+  if(!inp) return;
+  addTodo(inp.value);
+  inp.value='';
+  inp.focus();
+}
+function toggleTodo(id){
+  var todos=loadTodos();
+  todos=todos.map(function(t){if(t.id===id){t.done=!t.done;}return t;});
+  saveTodos(todos);
+  renderTodos();
+}
+function deleteTodo(id){
+  var todos=loadTodos().filter(function(t){return t.id!==id});
+  saveTodos(todos);
+  renderTodos();
+}
+function clearDoneTodos(){
+  var todos=loadTodos();
+  var doneCount=todos.filter(function(t){return t.done}).length;
+  if(doneCount===0){ showToast('No completed tasks to clear','warn'); return; }
+  if(!confirm('Clear '+doneCount+' completed task(s)?')) return;
+  todos=todos.filter(function(t){return !t.done});
+  saveTodos(todos);
+  renderTodos();
+  showToast('✔ Cleared '+doneCount+' completed task(s)');
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', renderTodos);
+} else {
+  renderTodos();
+}
+</script>
+</body>
+</html>
